@@ -1,30 +1,16 @@
 import os
+from dotenv import load_dotenv
 import google.generativeai as genai
 
-from dotenv import load_dotenv
-from utils.prompts import build_prompt
-
-
+# Load local .env when running on your computer
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
-    raise ValueError("GEMINI_API_KEY not found in .env")
-
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel("gemini-2.5-flash")
-
-
-def generate_roadmap(skills, role, months):
-
-    prompt = build_prompt(
-        skills,
-        role,
-        months
+    raise ValueError(
+        "GEMINI_API_KEY is missing. Add it to your local .env file or Streamlit secrets."
     )
 
-    response = model.generate_content(prompt)
-
-    return response.text
+genai.configure(api_key=api_key)
+## THIS IS ANOTHER ONE 
