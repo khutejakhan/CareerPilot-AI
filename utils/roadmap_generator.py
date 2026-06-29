@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Load .env locally
+# Load environment variables
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -12,33 +12,52 @@ if not api_key:
         "GEMINI_API_KEY is missing. Add it to your local .env file or Streamlit secrets."
     )
 
+# Configure Gemini
 genai.configure(api_key=api_key)
 
 
 def generate_roadmap(skills, role, months):
 
     prompt = f"""
-    You are an expert career mentor.
+You are an expert career mentor and senior software engineer.
 
-    Create a detailed {months}-month roadmap to become a {role}.
+Create a professional {months}-month roadmap to become a {role}.
 
-    Current skills:
-    {skills}
+Current skills:
+{skills}
 
-    Include:
+Include:
 
-    1. Month-by-month learning plan
-    2. Recommended courses
-    3. Hands-on projects
-    4. Technologies to learn
-    5. Interview preparation tips
-    6. Portfolio suggestions
+# Month-by-Month Learning Plan
+Give clear goals for each month.
 
-    Format the response beautifully in Markdown.
-    """
+# Courses
+Recommend free and paid resources.
 
-    model = genai.GenerativeModel("gemini-2.5-flash")
+# Projects
+Suggest real-world portfolio projects.
 
-    response = model.generate_content(prompt)
+# Technologies
+Mention frameworks, tools, and platforms.
 
-    return response.text
+# Interview Preparation
+Explain what to practice.
+
+# Portfolio Tips
+Tell the user what to showcase on GitHub and LinkedIn.
+
+Format everything beautifully in Markdown with headings, bullet points, and emojis.
+"""
+
+    try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+
+        response = model.generate_content(prompt)
+
+        if response and response.text:
+            return response.text
+
+        return "⚠️ Gemini returned an empty response."
+
+    except Exception as e:
+        return f"❌ Ai service Busy! : {str(e)}"
